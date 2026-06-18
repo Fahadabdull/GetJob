@@ -110,7 +110,7 @@
     <div id="auth-gate">
         <h3>Admin Access</h3>
         <p>Manage the GetJob Listings Panel</p>
-        <input type="password" id="adminPass" placeholder="Enter password (hint: admin)">
+        <input type="password" id="adminPass" placeholder="Enter password">
         <button onclick="checkPass()">Login Dashboard</button>
     </div>
 
@@ -168,7 +168,7 @@
 
     <script>
         function checkPass() {
-            if(document.getElementById('adminPass').value === 'admin') {
+            if(document.getElementById('adminPass').value === 'Fahad19001@') {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('admin-panel').style.display = 'block';
             } else { alert('Incorrect password'); }
