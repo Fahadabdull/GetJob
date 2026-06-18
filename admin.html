@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+    <title>GetJob | Admin Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --primary: #10B981;
+            --primary-hover: #059669;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding: 60px 20px; }
+
+        #auth-gate {
+            max-width: 420px;
+            margin: 80px auto;
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+            text-align: center;
+        }
+
+        #auth-gate h3 { font-size: 1.6rem; margin-bottom: 6px; letter-spacing: -0.02em; }
+        #auth-gate p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+        #auth-gate input { 
+            width: 100%; padding: 16px; margin-bottom: 20px; 
+            background: #F1F5F9; border: 1px solid var(--border); 
+            border-radius: 12px; outline: none; text-align: center; font-size: 1rem;
+        }
+        #auth-gate button { 
+            width: 100%; padding: 16px; background: var(--text-main); color: white; 
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--surface);
+            padding: 50px;
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.02);
+            display: none; 
+        }
+
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;}
+        .dashboard-header h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; }
+        .view-site { color: #4F46E5; text-decoration: none; font-weight: 600; font-size: 0.95rem;}
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+
+        input, select, textarea {
+            padding: 16px;
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--primary); 
+            background: #FFFFFF;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+        
+        textarea { resize: vertical; min-height: 140px; }
+
+        button.save-btn {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 18px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s ease;
+        }
+
+        button.save-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        
+        @media (max-width: 650px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-gate">
+        <h3>Admin Access</h3>
+        <p>Manage the GetJob Listings Panel</p>
+        <input type="password" id="adminPass" placeholder="Enter password (hint: admin)">
+        <button onclick="checkPass()">Login Dashboard</button>
+    </div>
+
+    <div class="container" id="admin-panel">
+        <div class="dashboard-header">
+            <h2>Post a New Job</h2>
+            <a href="index.html" class="view-site" target="_blank">↗ View Live Board</a>
+        </div>
+
+        <form id="jobForm" class="form-grid" onsubmit="saveJob(event)">
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" id="title" required placeholder="e.g. Senior Frontend Engineer">
+            </div>
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" id="company" required placeholder="e.g. TechFlow Inc.">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="location" required placeholder="e.g. Remote / New York">
+            </div>
+            <div class="form-group">
+                <label>Employment Type</label>
+                <select id="type" required>
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Freelance">Freelance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Salary Range</label>
+                <input type="text" id="salary" placeholder="e.g. $80k - $120k">
+            </div>
+            <div class="form-group">
+                <label>Application Deadline</label>
+                <input type="date" id="deadline" required>
+            </div>
+            <div class="form-group full-width">
+                <label>Application Redirect URL</label>
+                <input type="url" id="applyUrl" required placeholder="https://company.com/careers">
+            </div>
+            <div class="form-group full-width">
+                <label>Search Tags (Comma separated)</label>
+                <input type="text" id="tags" required placeholder="React, Node, Remote, Remote">
+            </div>
+            <div class="form-group full-width">
+                <label>Job Description</label>
+                <textarea id="description" required placeholder="Describe responsibilities and requirements..."></textarea>
+            </div>
+            <button type="submit" class="save-btn">Publish Job Listing</button>
+        </form>
+    </div>
+
+    <script>
+        function checkPass() {
+            if(document.getElementById('adminPass').value === 'admin') {
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+            } else { alert('Incorrect password'); }
+        }
+
+        function encodeData(dataObj) { return btoa(encodeURIComponent(JSON.stringify(dataObj))); }
+        function decodeData(encodedStr) {
+            try { return JSON.parse(decodeURIComponent(atob(encodedStr))); } catch (e) { return []; }
+        }
+
+        function saveJob(e) {
+            e.preventDefault();
+            const newJob = {
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                company: document.getElementById('company').value,
+                location: document.getElementById('location').value,
+                type: document.getElementById('type').value,
+                salary: document.getElementById('salary').value || 'Unspecified',
+                deadline: document.getElementById('deadline').value,
+                applyUrl: document.getElementById('applyUrl').value,
+                tags: document.getElementById('tags').value,
+                description: document.getElementById('description').value,
+                postedAt: new Date().toISOString()
+            };
+
+            let jobs = [];
+            const existingData = localStorage.getItem('getjob_data');
+            if (existingData) { jobs = decodeData(existingData); }
+
+            jobs.push(newJob);
+            localStorage.setItem('getjob_data', encodeData(jobs));
+            document.getElementById('jobForm').reset();
+            alert('Success! Job published to live database layout.');
+        }
+    </script>
+</body>
+</html>
